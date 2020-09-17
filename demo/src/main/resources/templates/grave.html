@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索数据</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body class="container">
+<br>
+<div class="form-inline">
+    <input type="text" class="form-control" name="operationNo" id="searchNo" placeholder="输入企业编号" value="GM2018">
+    <button class="btn btn-primary" onclick="search()" style="margin-left: 40px">搜索</button>
+</div>
+<br>
+<hr style="height:1px;border:none;border-top:1px solid #555555;"/>
+<h3>墓穴信息</h3>
+<div class="form-inline">
+    <p style="display:inline-block!important;">企业编号：</p>
+    <p style="display:inline-block!important;" id="operationNo">xxxx</p>
+</div>
+<div class="form-inline">
+    <p style="display:inline-block!important;">墓穴位置：</p>
+    <p style="display:inline-block!important;" id="graveFullPath">xxxx</p>
+</div>
+<div>
+    <p style="display:inline-block!important;">认购人姓名：</p>
+    <p style="display:inline-block!important;" id="contactName">xxxx</p>
+</div>
+<div>
+    <p style="display:inline-block!important;">墓穴使用人姓名：</p>
+    <p style="display:inline-block!important;" id="graveUser">xxxx</p>
+</div>
+<div>
+    <p style="display:inline-block!important;">维护管理服务到期时间：</p>
+    <p style="display:inline-block!important;" id="endDate">xxxx</p>
+</div>
+<hr style="height:1px;border:none;border-top:1px solid #555555;"/>
+<div id="recordDiv">
+
+</div>
+
+<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+    function search() {
+        var searchNo = $("#searchNo").val();
+        $.ajax({
+            url: "/search/" + searchNo,
+            success: function (result) {
+                console.log(result)
+                $("#operationNo").html(result.operationNo);
+                $("#graveFullPath").html(result.graveFullPath);
+                $("#contactName").html(result.contactName);
+                $("#graveUser").html(result.graveUser);
+                $("#endDate").html(result.endDate);
+                var html = "<h3>缴费历史记录</h3>";
+                if (result.paymentRecords) {
+                    for (var i = 0; i < result.paymentRecords.length; i++) {
+                        var option = result.paymentRecords[i];
+                        html += "<div>\n" +
+                            "        <p style=\"display:inline-block!important;\">缴费时间：</p>\n" +
+                            "        <p style=\"display:inline-block!important;\">" + option.createDate + "</p>\n" +
+                            "    </div>\n" +
+                            "    <div>\n" +
+                            "        <p style=\"display:inline-block!important;\">缴费期限：</p>\n" +
+                            "        <p style=\"display:inline-block!important;\">" + option.tarm + "</p>\n" +
+                            "    </div>\n" +
+                            "    <div>\n" +
+                            "        <p style=\"display:inline-block!important;\">缴费金额：</p>\n" +
+                            "        <p style=\"display:inline-block!important;\">" + option.price + "元</p>\n" +
+                            "    </div>\n" +
+                            "    <div>\n" +
+                            "        <p style=\"display:inline-block!important;\">到期时间：</p>\n" +
+                            "        <p style=\"display:inline-block!important;\">" + option.endDate + "</p>\n" +
+                            "    </div><br>"
+                    }
+                }
+                $("#recordDiv").html(html);
+            }
+        });
+    }
+</script>
+</body>
+</html>
+
+
